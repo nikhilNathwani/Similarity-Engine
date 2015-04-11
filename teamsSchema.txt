@@ -1,0 +1,4 @@
+CREATE TABLE teams (
+team_id INTEGER PRIMARY KEY,
+name TEXT,
+year INTEGER) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;

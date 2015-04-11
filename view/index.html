@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Engine</title>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/view.js"></script>
+        
+        <!-- Bootstrap Core CSS -->
+        <link href="css/engine.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+            
+        <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
+        
+    </head>
+    <body>
+        <div id="pickTeam">
+			<form name="myForm" role="form" novalidate="novalidate" class="form-inline">
+			  <div class="form-group">
+				<label>Pick a team</label>
+				<select id="teamName" class="form-control">
+				  <option value="BOS">BOS</option>
+				</select>
+			  </div>
+			  <div class="form-group">
+				<label>, a season</label>
+				<select id="season" class="form-control">
+				  <option value="2011">2010-11</option>
+				  <option value="2012">2011-12</option>
+				  <option value="2013">2012-13</option>
+				</select>
+			  </div>
+			  <div class="form-group">
+				<label>, and a stat</label>
+				<select id="stat" class="form-control">
+				  <option value="pts_per_g">points per game</option>
+				  <option value="orb_per_g">offensive rebounds per game</option>
+				  <option value="fg3_per_g">3-pt field goals per game</option>
+				</select>
+			  </div>
+			  <input id="updateButton" 
+					type="button" 
+					value="Go"
+					class="btn btn-primary"/>
+			</form>
+        </div>
+		
+		<div id="playerComparison"></div>
+		
+		<div id="neighbors"></div>
+        
+        <!-- D3.js -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script type="text/javascript">
+	
+			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#25799A", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP":"#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
+	
+			
+			var svg= d3.select("body")
+						.append("svg")
+						.attr("width", "100%")
+						.attr("height", 1000)
+						.attr("x",0)
+						.attr("y",0)
+			
+            //Create Player Comparison section
+            var playerComp= svg.append("svg")
+								.attr("width", 300)
+								.attr("height", "100%")
+								.attr("x",10)
+								.attr("y",10)
+			
+			var titleWidth= 120;
+			var titleHeight= 60;
+			var titlePad= 20;
+			var maxNumPlayers= 15;
+			var rectHeight= 30;
+
+			var playerCompTitles= ["chosenTeam","chosenNeighbor"];
+			var playerCompGroups= {}
+			
+			for(var i=0; i<2; i++) {
+				playerCompGroups[playerCompTitles[i]]= playerComp.append("g");
+				p= playerCompGroups[playerCompTitles[i]];
+				p.append("rect")
+					.attr("width",titleWidth)
+					.attr("height",titleHeight)
+					.attr("x",i*(titleWidth+titlePad))
+					.attr("y",0)
+					.attr("fill", colors["BOS"])
+					.attr("stroke", colors["BOS"])
+				p.append("text")
+					.attr("x",titleWidth/2 + i*(titleWidth+titlePad))
+					.attr("y",titleHeight/2)
+					.attr("fill","white")
+					.attr("font-size",16)
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central")
+					.text("BOS '13-'14")
+				for(var j=0; j<maxNumPlayers; j++) {
+					p.append("g")
+						.attr("class","cell")
+						.append("rect")
+						.attr("width",titleWidth)
+						.attr("height",rectHeight)
+						.attr("fill","white")
+						.attr("stroke","#999999")
+						.attr("x",i*(titleWidth+titlePad))
+						.attr("y",titleHeight+rectHeight*j)
+				}
+			}
+			
+			
+			var neighborsPerGroup= 3;
+			var numYearGroups= 5;
+			var yearWindow= 10;
+			var rectWidth= 120;
+			
+            var neighbors= svg.append("svg")
+								.attr("id","neighbors")
+								.attr("width",900)
+								.attr("height","100%")
+								.attr("x",300)
+								.attr("y",10);
+			
+			var otherTeams= [0,0,0,0,0];
+			var t= ["ATL","SAS","HOU","DEN","DET"]
+			for(i=0;i<numNeighbors;i++) {
+				tmp= neighbors.append("g")
+								.attr("class","teamHeader")
+				tmp.append("rect")
+					.attr("width",rectWidth)
+					.attr("height",titleHeight)
+					.attr("x",(rectWidth+titlePad)*(i+1))
+					.attr("y",0)
+					.attr("fill", colors[t[i]]);
+				tmp.append("text")
+					.attr("x",(rectWidth+titlePad)*(i+1) + rectWidth/2)
+					.attr("y",30)
+					.attr("fill","white")
+					.attr("font-size",16)
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central")
+					.text(t[i] + " '13-'14");
+				otherTeams[i]= tmp[0][0];
+			}
+								
+                
+            d3.select("#updateButton").on("click", function() {
+				console.log("Heard the click!",d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
+                update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
+            })
+
+        </script>
+        
+        <!-- jQuery -->
+        <script src="js/jquery.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+    </body>
+</html>
