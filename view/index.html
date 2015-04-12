@@ -5,6 +5,7 @@
         <title>Engine</title>
 		<script type="text/javascript" src="js/util.js"></script>
 		<script type="text/javascript" src="js/view.js"></script>
+		<script src="http://d3js.org/queue.v1.min.js"></script>
         
         <!-- Bootstrap Core CSS -->
         <link href="css/engine.css" rel="stylesheet">
@@ -111,43 +112,57 @@
 			}
 			
 			
-			var neighborsPerGroup= 3;
+			var neighborsPerGroup= 5;
 			var numYearGroups= 5;
 			var yearWindow= 10;
 			var rectWidth= 120;
 			
-            var neighbors= svg.append("svg")
+			var neighbors= svg.append("svg")
 								.attr("id","neighbors")
 								.attr("width",900)
 								.attr("height","100%")
 								.attr("x",300)
 								.attr("y",10);
 			
-			var otherTeams= [0,0,0,0,0];
 			var t= ["ATL","SAS","HOU","DEN","DET"]
-			for(i=0;i<numNeighbors;i++) {
-				tmp= neighbors.append("g")
-								.attr("class","teamHeader")
-				tmp.append("rect")
-					.attr("width",rectWidth)
-					.attr("height",titleHeight)
-					.attr("x",(rectWidth+titlePad)*(i+1))
-					.attr("y",0)
-					.attr("fill", colors[t[i]]);
-				tmp.append("text")
-					.attr("x",(rectWidth+titlePad)*(i+1) + rectWidth/2)
-					.attr("y",30)
-					.attr("fill","white")
-					.attr("font-size",16)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-					.text(t[i] + " '13-'14");
-				otherTeams[i]= tmp[0][0];
+			
+			var otherTeams= [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+			for(var i=0; i<numYearGroups; i++) {
+				yrGroup= neighbors.append("g")
+									.attr("class","yearGroup")
+									.attr("id",i);
+				for(var j=0; j<neighborsPerGroup; j++) {
+					tmp= yrGroup.append("g")
+							.attr("class","teamHeader")
+					tmp.append("rect")
+						.attr("width",rectWidth)
+						.attr("height",titleHeight)
+						.attr("x",(rectWidth+titlePad)*(j+1))
+						.attr("y",(titleHeight+20)*i)
+						.attr("fill", colors[t[j]]);
+					tmp.append("text")
+						.attr("x",(rectWidth+titlePad)*(j+1) + rectWidth/2)
+						.attr("y",30+(titleHeight+20)*i)
+						.attr("fill","white")
+						.attr("font-size",16)
+						.attr("text-anchor","middle")
+						.attr("dominant-baseline","central")
+						.text(t[j] + " '13-'14");
+					otherTeams[i][j]= tmp[0][0];
+				}
 			}
-								
+			console.log("OTHER TEAMS",otherTeams);				
                 
             d3.select("#updateButton").on("click", function() {
 				console.log("Heard the click!",d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
+				/*queue()
+					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=2006&yearN=2015&stat=pts_per_g")
+					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1996&yearN=2005&stat=pts_per_g")
+					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1986&yearN=1995&stat=pts_per_g")
+					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1976&yearN=1985&stat=pts_per_g")
+					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1966&yearN=1975&stat=pts_per_g")
+					.await(update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value));*/
+				console.log("PARAMS",d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
                 update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
             })
 

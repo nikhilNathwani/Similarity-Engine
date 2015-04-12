@@ -1,0 +1,17 @@
+Creating the right virtual environment: 
+
+virtualenv venv
+
+. venv/bin/activate
+
+pip install flask
+
+pip install flask-sqlalchemy
+
+pip install -U numpy scipy scikit-learn
+
+export PATH=$PATH:/usr/local/mysql/bin
+
+pip install mysql-python
+
+sudo /usr/local/mysql/support-files/mysql.server start

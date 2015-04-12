@@ -190,19 +190,20 @@ def kNN():
 	if request.method == 'GET':
 		#0) Process input arguments
 		team= request.args.get('team',"BOS")
-		year0= request.args.get('year',1947)
-		yearN= request.args.get('year',2015)
+		yr= request.args.get('year',2012)
+		year0= request.args.get('year0',1947)
+		yearN= request.args.get('yearN',2015)
 		stat= request.args.get('stat','pts_per_g')
 		time0= time.time()
 
 		#1) Get team_id t of input team. Called "chosenTeam"
-		query= "SELECT team_id FROM teams WHERE name=%s AND year>=%s AND year<=%s" % ("\""+team+"\"",year0,yearN)
+		query= "SELECT team_id FROM teams WHERE name=%s AND year=%s" % ("\""+team+"\"",yr)
 		result= Team.query.from_statement(query).first()
 		chosenTeam= int(result.team_id)
 		time1= time.time()
 
 		#2) Get all team_id's != t. List called "otherTeams"
-		query= "SELECT team_id FROM teams WHERE team_id!=%d" % (chosenTeam)
+		query= "SELECT team_id FROM teams WHERE team_id!=%d AND year>=%s AND year<=%s" % (chosenTeam,year0,yearN)
 		results= Team.query.from_statement(query).all()
 		otherTeams= [r.team_id for r in results]
 		time2= time.time()

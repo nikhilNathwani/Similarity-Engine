@@ -27,6 +27,26 @@ function resetRadii() {
 	return;
 }
 
+var yrGroups= [2015,2005,1995,1985,1975];
+
+function updateYearGroup(numGroup,teamName,year,stat) {
+	console.log("NumGroup",numGroup,teamName,year,stat);
+		d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&year0="+(yrGroups[0]-9)+"&yearN="+yrGroups[0]+"&stat="+stat,function(teams) {
+			console.log(teams)
+			for(var j=0;j<neighborsPerGroup;i++) {
+				console.log("OTHER TEAMS",i,j,otherTeams[i]);
+				d3.select(otherTeams[numGroup][j]).select("rect")
+										.attr("fill",colors[teams.items[j].team]);
+				yr= teams.items[j].year;
+				d3.select(otherTeams[numGroup][j]).select("text")
+							.text(teams.items[j].team + " " + yearToSeason(yr));
+			}	
+			console.log("chunbi");
+		});
+		
+		console.log("Async DB call (should be) in progress");
+}
+
 function update(teamName,year,stat) {
 	//Grab list of players for selected team
 	
@@ -38,21 +58,10 @@ function update(teamName,year,stat) {
 	
 	//Reset radii to be scaled properly
 	
-	
 	playerCompGroups["chosenTeam"].select("text")
-					.text(teamName + " " + yearToSeason(year));
+						.text(teamName + " " + yearToSeason(year));
 						
-	d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&stat="+stat,function(teams) {
-		console.log(teams)
-		for(i=0;i<numNeighbors;i++) {
-			d3.select(otherTeams[i]).select("rect")
-									.attr("fill",colors[teams.items[i].team]);
-			yr= teams.items[i].year;
-			d3.select(otherTeams[i]).select("text")
-						.text(teams.items[i].team + " " + yearToSeason(yr));
-		}
-		console.log("chunbi");
-	});
-	
-	console.log("Async DB call (should be) in progress");
+	for(var i=0; i<numYearGroups; i++) {
+		updateYearGroup(i,teamName,year,stat);
+	}
 }
