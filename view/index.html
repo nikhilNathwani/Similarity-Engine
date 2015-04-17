@@ -19,24 +19,20 @@
 			<form name="myForm" role="form" novalidate="novalidate" class="form-inline">
 			  <div class="form-group">
 				<label>Pick a team</label>
-				<select id="teamName" class="form-control">
-				  <option value="BOS">BOS</option>
+				<select id="teamSel" class="form-control">
+					<option value="" selected="selected">Select team</option>
 				</select>
 			  </div>
 			  <div class="form-group">
 				<label>, a season</label>
-				<select id="season" class="form-control">
-				  <option value="2011">2010-11</option>
-				  <option value="2012">2011-12</option>
-				  <option value="2013">2012-13</option>
+				<select id="seasonSel" class="form-control">
+					<option value="" selected="selected">please select team first</option>
 				</select>
 			  </div>
 			  <div class="form-group">
 				<label>, and a stat</label>
-				<select id="stat" class="form-control">
-				  <option value="pts_per_g">points per game</option>
-				  <option value="orb_per_g">offensive rebounds per game</option>
-				  <option value="fg3_per_g">3-pt field goals per game</option>
+				<select id="statSel" class="form-control">
+					<option value="" selected="selected">please select season first</option>
 				</select>
 			  </div>
 			  <input id="updateButton" 
@@ -154,7 +150,7 @@
 			console.log("OTHER TEAMS",otherTeams);				
                 
             d3.select("#updateButton").on("click", function() {
-				console.log("Heard the click!",d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
+				console.log("Heard the click!",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
 				/*queue()
 					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=2006&yearN=2015&stat=pts_per_g")
 					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1996&yearN=2005&stat=pts_per_g")
@@ -162,8 +158,8 @@
 					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1976&yearN=1985&stat=pts_per_g")
 					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1966&yearN=1975&stat=pts_per_g")
 					.await(update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value));*/
-				console.log("PARAMS",d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
-                update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value);
+				console.log("PARAMS",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
+                update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
             })
 
         </script>

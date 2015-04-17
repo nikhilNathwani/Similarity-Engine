@@ -36,14 +36,13 @@ def getImmediateSubdirectories(dir):
     return [name for name in os.listdir(dir)
             if os.path.isdir(os.path.join(dir, name))]
 
-def getTeamYearsFromFolder(team):
-	currentDir= os.getcwd()
-	files= [name for name in os.listdir(currentDir+'/'+team)]
+def getTeamYearsFromFolder(team,folder):
+	files= [name for name in os.listdir(folder+'/'+team)]
 	team_years= []
 	for f in files:
 		year= f[f.find('_')+1:f.find('.')]
-		team_years += [(f,year)]
-	return sorted(team_years, key=lambda tup: tup[1])
+		team_years.append(year)
+	return sorted(team_years)
             
 
 
