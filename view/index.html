@@ -151,13 +151,6 @@
                 
             d3.select("#updateButton").on("click", function() {
 				console.log("Heard the click!",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
-				/*queue()
-					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=2006&yearN=2015&stat=pts_per_g")
-					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1996&yearN=2005&stat=pts_per_g")
-					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1986&yearN=1995&stat=pts_per_g")
-					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1976&yearN=1985&stat=pts_per_g")
-					.defer(d3.json, "http://localhost:5000/knn/?team=BOS&year2011&year0=1966&yearN=1975&stat=pts_per_g")
-					.await(update(d3.select("#teamName").node().value, d3.select("#season").node().value, d3.select("#stat").node().value));*/
 				console.log("PARAMS",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
                 update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
             })

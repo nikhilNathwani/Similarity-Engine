@@ -1,4 +1,7 @@
 
+
+
+/* CONSIDER CONDENSING THESE TO REDUCE PAGE LOAD TIME. E.G. FOR STATLISTS, ONLY STORE THE STATS TO BE OMITTED FOR EACH SEASON*/ 
 var statDisplays= {'age':'Age','g':'Games played','gs':'Games started','mp_per_g':'Minutes per game','fg_per_g':'Field goals per game','fga_per_g':'FG attempts per game','fg_pct':'Field goal percentage','fg3_per_g':'3-pt field goals per game','fg3a_per_g':'3-pt FG attempts per game','fg3_pct':'3-pt field goal percentage','fg2_per_g':'2-pt field goals per game','fg2a_per_g':'2-pt FG attempts per game','fg2_pct':'2-pt field goal percentage','ft_per_g':'Free throws per game','fta_per_g':'FT attempts per game','ft_pct':'Free throw percentage','orb_per_g':'Offensive rebounds per game','drb_per_g':'Defensive rebounds per game','trb_per_g':'Total rebounds per game','ast_per_g':'Assists per game','stl_per_g':'Steals per game','blk_per_g':'Blocks per game','tov_per_g':'Turnovers per game','pf_per_g':'Personal fouls per game','pts_per_g':'Points per game'};
 var statLists= [['age','g','fg_per_g','fga_per_g','fg_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','ast_per_g','pf_per_g','pts_per_g'],['age','g','fg_per_g','fga_per_g','fg_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','trb_per_g','ast_per_g','pf_per_g','pts_per_g'],['age','g','mp_per_g','fg_per_g','fga_per_g','fg_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','trb_per_g','ast_per_g','pf_per_g','pts_per_g'],['age','g','mp_per_g','fg_per_g','fga_per_g','fg_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','orb_per_g','drb_per_g','trb_per_g','ast_per_g','stl_per_g','blk_per_g','pf_per_g','pts_per_g'],['age','g','mp_per_g','fg_per_g','fga_per_g','fg_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','orb_per_g','drb_per_g','trb_per_g','ast_per_g','stl_per_g','blk_per_g','tov_per_g','pf_per_g','pts_per_g'],['age','g','gs','mp_per_g','fg_per_g','fga_per_g','fg_pct','fg3_per_g','fg3a_per_g','fg3_pct','fg2_per_g','fg2a_per_g','fg2_pct','ft_per_g','fta_per_g','ft_pct','orb_per_g','drb_per_g','trb_per_g','ast_per_g','stl_per_g','blk_per_g','tov_per_g','pf_per_g','pts_per_g']];
 var yearToStatList= {1947:0,1948:0,1949:0,1950:0,1951:1,1952:2,1953:2,1954:2,1955:2,1956:2,1957:2,1958:2,1959:2,1960:2,1961:2,1962:2,1963:2,1964:2,1965:2,1966:2,1967:2,1968:2,1969:2,1970:2,1971:2,1972:2,1973:2,1974:3,1975:3,1976:3,1977:3,1978:4,1979:4,1980:5,1981:5,1982:5,1983:5,1984:5,1985:5,1986:5,1987:5,1988:5,1989:5,1990:5,1991:5,1992:5,1993:5,1994:5,1995:5,1996:5,1997:5,1998:5,1999:5,2000:5,2001:5,2002:5,2003:5,2004:5,2005:5,2006:5,2007:5,2008:5,2009:5,2010:5,2011:5,2012:5,2013:5,2014:5,2015:5};
@@ -65,10 +68,10 @@ var yrGroups= [2015,2005,1995,1985,1975];
 
 function updateYearGroup(numGroup,teamName,year,stat) {
 	console.log("NumGroup",numGroup,teamName,year,stat);
-		d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&year0="+(yrGroups[0]-9)+"&yearN="+yrGroups[0]+"&stat="+stat,function(teams) {
+		d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&year0="+(yrGroups[numGroup]-9)+"&yearN="+yrGroups[numGroup]+"&stat="+stat,function(teams) {
 			console.log(teams)
-			for(var j=0;j<neighborsPerGroup;i++) {
-				console.log("OTHER TEAMS",i,j,otherTeams[i]);
+			for(var j=0;j<neighborsPerGroup;j++) {
+				console.log("OTHER TEAMS",j,otherTeams[j]);
 				d3.select(otherTeams[numGroup][j]).select("rect")
 										.attr("fill",colors[teams.items[j].team]);
 				yr= teams.items[j].year;
