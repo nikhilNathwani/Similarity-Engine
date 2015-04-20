@@ -63,6 +63,33 @@ def teams():
 		return jsonify(items=json_result)
 	return
 
+@app.route('/playersOfTeam/', methods=['GET'])
+def playersOfTeam():
+	if request.method == 'GET':
+		team= request.args.get('team',"BOS")
+		year= request.args.get('year',2012)
+		stat= request.args.get('stat','pts_per_g')
+		print team, year, stat
+
+		teamQuery= "SELECT team_id FROM teams WHERE name=%s AND year=%d" % ("\""+team+"\"",year)
+		teamResult= Team.query.from_statement(teamQuery).first()
+		print teamResult
+
+		queryPlayers= "SELECT * FROM players WHERE team_id=%d" % (teamResult.team_id)
+		playerResults= Player.query.from_statement(queryPlayers).all()
+		print playerResults, "asasd"
+
+		players= []
+		for p in playerResults:
+			players.append({"name":p.player, "statValue":getattr(p,stat)})
+		json_result= {'team':team,
+					  'year':year,
+					  'players':sorted(players,key=lambda x: x['statValue'], reverse=True)
+					 }
+
+		return jsonify(items=json_result)
+	return
+
 '''@app.route('/teams/', methods=['GET'])
 def teams():
 	if request.method == 'GET':
