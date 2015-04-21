@@ -67,9 +67,9 @@ def teams():
 def playersOfTeam():
 	if request.method == 'GET':
 		team= request.args.get('team',"BOS")
-		year= request.args.get('year',2012)
+		year= int(request.args.get('year',2012))
 		stat= request.args.get('stat','pts_per_g')
-		print team, year, stat
+		print team, year, stat, type(year)
 
 		teamQuery= "SELECT team_id FROM teams WHERE name=%s AND year=%d" % ("\""+team+"\"",year)
 		teamResult= Team.query.from_statement(teamQuery).first()
@@ -82,11 +82,11 @@ def playersOfTeam():
 		players= []
 		for p in playerResults:
 			players.append({"name":p.player, "statValue":getattr(p,stat)})
-		json_result= {'team':team,
+		'''json_result= {'team':team,
 					  'year':year,
 					  'players':sorted(players,key=lambda x: x['statValue'], reverse=True)
-					 }
-
+					 }'''
+		json_result= sorted(players,key=lambda x: x['statValue'], reverse=True)
 		return jsonify(items=json_result)
 	return
 
