@@ -56,7 +56,7 @@
 			var svg= d3.select("body")
 						.append("svg")
 						.attr("width", "100%")
-						.attr("height", 1000)
+						.attr("height", 2000)
 						.attr("x",0)
 						.attr("y",0)
 			
@@ -70,7 +70,7 @@
 			var titleWidth= 120;
 			var titleHeight= 60;
 			var titlePad= 20;
-			var maxNumPlayers= 15;
+			var maxNumPlayers= 200;
 			var rectHeight= 30;
 
 			var playerCompTitles= ["chosenTeam","chosenNeighbor"];
@@ -80,6 +80,7 @@
 				playerCompGroups[playerCompTitles[i]]= playerComp.append("g");
 				p= playerCompGroups[playerCompTitles[i]];
 				p.append("rect")
+					.attr("id","titleRect")
 					.attr("width",titleWidth)
 					.attr("height",titleHeight)
 					.attr("x",i*(titleWidth+titlePad))
@@ -87,6 +88,7 @@
 					.attr("fill", colors["BOS"])
 					.attr("stroke", colors["BOS"])
 				p.append("text")
+					.attr("id","titleText")
 					.attr("x",titleWidth/2 + i*(titleWidth+titlePad))
 					.attr("y",titleHeight/2)
 					.attr("fill","white")
@@ -94,17 +96,38 @@
 					.attr("text-anchor","middle")
 					.attr("dominant-baseline","central")
 					.text("BOS '13-'14")
+				
+				dummyData= [];	
 				for(var j=0; j<maxNumPlayers; j++) {
-					p.append("g")
-						.attr("class","cell")
-						.append("rect")
-						.attr("width",titleWidth)
-						.attr("height",rectHeight)
-						.attr("fill","white")
-						.attr("stroke","#999999")
-						.attr("x",i*(titleWidth+titlePad))
-						.attr("y",titleHeight+rectHeight*j)
+					dummyData.push(j);	
 				}
+				
+				var rows= p.selectAll("g.row")
+							.data(dummyData)
+							.enter()
+							.append("g")
+							.attr("class","row")
+							
+				rows.append("rect")
+					.attr("width",titleWidth)
+					.attr("height",rectHeight)
+					.attr("fill","white")
+					.attr("stroke","#999999")
+					.attr("x",i*(titleWidth+titlePad))
+					.attr("y",function(d,j) {
+						return titleHeight+rectHeight*j;
+					});
+				rows.append("text")
+					.attr("fill","black")
+					.attr("font-size",12)
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central")
+					.attr("x",i*(titleWidth+titlePad) + titleWidth/2)
+					.attr("y",function(d,j){
+						return titleHeight+rectHeight*j + rectHeight/2;
+					})
+					.text(function(d){return ""+d;});
+				
 			}
 			
 			
@@ -150,6 +173,9 @@
 			console.log("OTHER TEAMS",otherTeams);				
                 
             d3.select("#updateButton").on("click", function() {
+				//Set chosen team's info in player comparison region
+				setChosenTeamInPlayerComparison(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value,false);
+				
 				console.log("Heard the click!",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
 				console.log("PARAMS",d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
                 update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
