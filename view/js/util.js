@@ -1,5 +1,6 @@
 
 function yearToSeason(number) {
+	if(number=="") { return ""; }
 	var yr1 = (number-1)%100 + '';
 	while (yr1.length < 2) {
 		yr1 = '0' + yr1;

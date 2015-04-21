@@ -77,57 +77,8 @@
 			var playerCompGroups= {}
 			
 			for(var i=0; i<2; i++) {
-				playerCompGroups[playerCompTitles[i]]= playerComp.append("g");
+				playerCompGroups[playerCompTitles[i]]= playerComp.append("g").attr("id",playerCompTitles[i]);
 				p= playerCompGroups[playerCompTitles[i]];
-				p.append("rect")
-					.attr("id","titleRect")
-					.attr("width",titleWidth)
-					.attr("height",titleHeight)
-					.attr("x",i*(titleWidth+titlePad))
-					.attr("y",0)
-					.attr("fill", colors["BOS"])
-					.attr("stroke", colors["BOS"])
-				p.append("text")
-					.attr("id","titleText")
-					.attr("x",titleWidth/2 + i*(titleWidth+titlePad))
-					.attr("y",titleHeight/2)
-					.attr("fill","white")
-					.attr("font-size",16)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-					.text("BOS '13-'14")
-				
-				dummyData= [];	
-				for(var j=0; j<maxNumPlayers; j++) {
-					dummyData.push(j);	
-				}
-				
-				var rows= p.selectAll("g.row")
-							.data(dummyData)
-							.enter()
-							.append("g")
-							.attr("class","row")
-							
-				rows.append("rect")
-					.attr("width",titleWidth)
-					.attr("height",rectHeight)
-					.attr("fill","white")
-					.attr("stroke","#999999")
-					.attr("x",i*(titleWidth+titlePad))
-					.attr("y",function(d,j) {
-						return titleHeight+rectHeight*j;
-					});
-				rows.append("text")
-					.attr("fill","black")
-					.attr("font-size",12)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-					.attr("x",i*(titleWidth+titlePad) + titleWidth/2)
-					.attr("y",function(d,j){
-						return titleHeight+rectHeight*j + rectHeight/2;
-					})
-					.text(function(d){return ""+d;});
-				
 			}
 			
 			

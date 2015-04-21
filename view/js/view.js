@@ -37,8 +37,45 @@ window.onload = function () {
 }
 
 
-function resetRowsInPlayerComp(group,newData,isNeighbor) {
-	var rows= group.selectAll('g.row')
+function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor) {
+	var groupTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
+	
+	//If there's no title in the player comp region yet, create the associated group
+	var titleGroup= playerCompGroups[groupTitle].selectAll('g.'+groupTitle+"Title")
+								.data([chosenTeam]);						
+	titleGroup.exit().remove();
+	titleGroup.enter().append("g")
+		.attr("class",groupTitle+"Title")
+		
+	//If there's no title rect or text, create it
+	//In any case, set properties of title rect and text
+	if(titleGroup.select("rect") == "") {
+		titleGroup.append("rect")
+					.attr("id","titleRect")
+					.attr("width",titleWidth)
+					.attr("height",titleHeight)
+					.attr("x",isNeighbor*(titleWidth+titlePad))
+					.attr("y",0)
+	}
+	if(titleGroup.select("text") == "") {
+		titleGroup.append("text")
+					.attr("id","titleText")
+					.attr("x",titleWidth/2 + isNeighbor*(titleWidth+titlePad))
+					.attr("y",titleHeight/2)
+					.attr("fill","white")
+					.attr("font-size",16)
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central");
+	}
+	titleGroup.select("#titleRect").attr("fill",function(d){return colors[d];});
+	titleGroup.select("#titleRect").attr("stroke",function(d){return colors[d];});
+	titleGroup.select("#titleText").text(function(d){return d + " " + yearToSeason(year);});
+	
+	
+	//Reset rows of player comp column to contain the correct number of rows
+	//And in the case of chosenTeam, populate the rows with the names of the
+	//players corresponding to the chosen team
+	var rows= playerCompGroups[groupTitle].selectAll('g.row')
 								.data(newData);
 									
 	//ADD A TRANSITION TO MAKE THIS EXIT/ENTER SMOOTH!
@@ -72,23 +109,13 @@ function resetRowsInPlayerComp(group,newData,isNeighbor) {
 //chosenTeam is a dict with "name","year","playerList",eventually "W-L record", etc.
 //isNeighbor is True if the player is a neighbor
 function setChosenTeamInPlayerComparison(chosenTeam,year,stat,isNeighbor) {
-	var playerCompTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
-	var playerCompGroup= playerCompGroups[playerCompTitle];
-	var oppositeCompTitle= isNeighbor ? "chosenTeam" : "chosenNeighbor";
-	var oppositeCompGroup= playerCompGroups[oppositeCompTitle];
 
 	
-	//Set playerComp title rects
-	playerCompGroup.select("#titleRect").attr("fill",colors[chosenTeam]);
-	playerCompGroup.select("#titleRect").attr("stroke",colors[chosenTeam]);
-	playerCompGroup.select("#titleText").text(chosenTeam + " " + yearToSeason(year));
-	
 	d3.json("http://localhost:5000/playersOfTeam/?team="+chosenTeam+"&year="+year+"&stat="+stat,function(players) {
-		resetRowsInPlayerComp(playerCompGroup,players["items"],isNeighbor);
+		resetRowsInPlayerComp(chosenTeam,year,players["items"],isNeighbor);
 		if(!isNeighbor){
 			var dummyOppData= Array.apply(null, new Array(players["items"].length)).map(String.prototype.valueOf,"");
-			resetRowsInPlayerComp(oppositeCompGroup,dummyOppData,true);
-			alert(dummyOppData.length);
+			resetRowsInPlayerComp("Click on team","",dummyOppData,true);
 		}
 			
 	});
