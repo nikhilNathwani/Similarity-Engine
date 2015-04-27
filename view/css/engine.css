@@ -11,3 +11,11 @@ select {
     margin: 0;
 }
 
+g.playerCompCell rect {
+	fill: white;
+	stroke: #999999;
+}
+
+g.playerCompCell text {
+	font-size: 12px;
+}

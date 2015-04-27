@@ -62,15 +62,17 @@
 			
             //Create Player Comparison section
             var playerComp= svg.append("svg")
-								.attr("width", 300)
+								.attr("width", 500)
 								.attr("height", "100%")
 								.attr("x",10)
 								.attr("y",10)
 			
-			var titleWidth= 120;
+			var titleWidth= 180;
+			var nameWidth= 120;
+			var statWidth= titleWidth-nameWidth;
 			var titleHeight= 60;
 			var titlePad= 20;
-			var maxNumPlayers= 200;
+			var maxNumPlayers= 15;
 			var rectHeight= 30;
 
 			var playerCompTitles= ["chosenTeam","chosenNeighbor"];
@@ -101,6 +103,7 @@
 				yrGroup= neighbors.append("g")
 									.attr("class","yearGroup")
 									.attr("id",i);
+									//.on("click",resetRowsInPlayerComp(chosenTeam,year,players["items"],isNeighbor,stat));
 				for(var j=0; j<neighborsPerGroup; j++) {
 					tmp= yrGroup.append("g")
 							.attr("class","teamHeader")
