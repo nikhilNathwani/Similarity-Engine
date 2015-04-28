@@ -41,56 +41,18 @@ window.onload = function () {
 function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 	var groupTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
 	
-	//If there's no title in the player comp region yet, create the associated group
-	var titleGroup= playerCompGroups[groupTitle].selectAll('g.'+groupTitle+"Title")
-								.data([chosenTeam]);						
-	titleGroup.exit().remove();
-	titleGroup.enter().append("g")
-		.attr("class",groupTitle+"Title")
-		
-	//If there's no title rect or text, create it
-	//In any case, set properties of title rect and text
-	if(titleGroup.select("rect") == "") {
-		titleGroup.append("rect")
-					.attr("id","titleRect")
-					.attr("width",titleWidth)
-					.attr("height",titleHeight)
-					.attr("x",isNeighbor*(titleWidth+titlePad))
-					.attr("y",0)
-		//Add row header rects
-		createShapeTextGroup(playerCompGroups[groupTitle],"nameHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad),titleHeight,nameWidth,rectHeight,"rect","Name");
-		createShapeTextGroup(playerCompGroups[groupTitle],"statHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight,statWidth,rectHeight,"rect",statAbbrevs[stat]);
-		titleGroup.append("rect")
-					.attr("id","rowHeaderNameRect")
-					.attr("width",nameWidth)
-					.attr("height",rectHeight)
-					.attr("x",isNeighbor*(titleWidth+titlePad))
-					.attr("y",titleHeight)
-					.attr("fill","white")
-					.attr("stroke","#999999")
-		titleGroup.append("rect")
-					.attr("id","rowHeaderStatRect")
-					.attr("width",statWidth)
-					.attr("height",rectHeight)
-					.attr("x",isNeighbor*(titleWidth+titlePad)+nameWidth)
-					.attr("y",titleHeight)
-					.attr("fill","white")
-					.attr("stroke","#999999")
-	}
-	if(titleGroup.select("text") == "") {
-		titleGroup.append("text")
-					.attr("id","titleText")
-					.attr("x",titleWidth/2 + isNeighbor*(titleWidth+titlePad))
-					.attr("y",titleHeight/2)
-					.attr("fill","white")
-					.attr("font-size",16)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-	}
-	titleGroup.select("#titleRect").attr("fill",function(d){return colors[d];});
-	titleGroup.select("#titleRect").attr("stroke",function(d){return colors[d];});
-	titleGroup.select("#titleText").text(function(d){return d + " " + yearToSeason(year);});
+	//Add title rect and text
+	var pcTitleGroup= playerCompGroups[groupTitle]
+	var pcTitle= createShapeTextGroup(pcTitleGroup,groupTitle+"Title","playerCompTitle",isNeighbor*(titleWidth+titlePad),0,titleWidth,titleHeight,"rect");
+	pcTitle["rect"].attr("fill",colors[chosenTeam]);
+	pcTitle["rect"].attr("stroke",colors[chosenTeam]);
+	pcTitle["text"].text(chosenTeam+" "+yearToSeason(year));
 	
+	//Add playerComparison table headers
+	var nh= createShapeTextGroup(pcTitleGroup,"nameHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad),titleHeight,nameWidth,rectHeight,"rect");
+	nh["text"].text("Name");
+	var sh= createShapeTextGroup(pcTitleGroup,"statHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight,statWidth,rectHeight,"rect");
+	sh["text"].text(statAbbrevs[stat]);
 	
 	//Reset rows of player comp column to contain the correct number of rows
 	//And in the case of chosenTeam, populate the rows with the names of the

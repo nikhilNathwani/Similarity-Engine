@@ -19,3 +19,8 @@ g.playerCompCell rect, g.playerCompHeader rect{
 g.playerCompCell text {
 	font-size: 12px;
 }
+
+g.playerCompTitle text {
+	font-size: 18px;
+	fill: white;
+}

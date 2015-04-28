@@ -76,4 +76,8 @@ function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape,txt) {
 			.attr("dominant-baseline","central")
 			.text(txt);
 	}
+	var grp= parent.select("g#"+groupID);
+	var obj={"text":grp.select("text")};
+	obj[shape]= grp.select(shape); //this is the only way to have a variable object key
+	return obj;
 }
