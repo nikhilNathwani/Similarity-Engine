@@ -41,39 +41,39 @@ console.log(getYearGroups(1948,numYearGroups,yearWindow));
 console.log(getYearGroups(1947,numYearGroups,yearWindow));*/
 
 function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape) {
-	//remove pre-existing context of the same ID
-	parent.select("g#"+groupID).remove();
-	
-	//create group
-	var grp= parent.append("g")
-					.attr("id",groupID);
-	if(className!=null) {
-		grp.attr("class",className);			
-	}
-	//handle rect OR circle creation
-	var xLoc= shape == "rect" ? "x" : "cx";
-	var yLoc= shape == "rect" ? "y" : "cy";
-	var width= shape == "rect" ? "width" : "rx";
-	var height= shape == "rect" ? "height" : "ry";
-	
-	//add shape
-	grp.append(shape)
-		.attr("id",groupID+"_"+shape)
-		.attr(xLoc,x)
-		.attr(yLoc,y)
-		.attr(width,function(){
-			return shape == "rect" ? w : w/2; //rx corresps. to 1/2 the width
-		})
-		.attr(height,function(){
-			return shape == "rect" ? h : h/2;
-		});
+	//only create stuff if the group doesn't exist
+	if(parent.select("g#"+groupID)=="") {
+		//create group
+		var grp= parent.append("g")
+						.attr("id",groupID);
+		if(className!=null) {
+			grp.attr("class",className);			
+		}
+		//handle rect OR circle creation
+		var xLoc= shape == "rect" ? "x" : "cx";
+		var yLoc= shape == "rect" ? "y" : "cy";
+		var width= shape == "rect" ? "width" : "rx";
+		var height= shape == "rect" ? "height" : "ry";
 		
-	//add text
-	grp.append("text")
-		.attr("id",groupID+"_text")
-		.attr(xLoc,x+w/2)
-		.attr(yLoc,y+h/2)
-		.attr("text-anchor","middle")
-		.attr("dominant-baseline","central")
-		.text("text");
+		//add shape
+		grp.append(shape)
+			.attr("id",groupID+"_"+shape)
+			.attr(xLoc,x)
+			.attr(yLoc,y)
+			.attr(width,function(){
+				return shape == "rect" ? w : w/2; //rx corresps. to 1/2 the width
+			})
+			.attr(height,function(){
+				return shape == "rect" ? h : h/2;
+			});
+			
+		//add text
+		grp.append("text")
+			.attr("id",groupID+"_text")
+			.attr(xLoc,x+w/2)
+			.attr(yLoc,y+h/2)
+			.attr("text-anchor","middle")
+			.attr("dominant-baseline","central")
+			.text("text");
+	}
 }
