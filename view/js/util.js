@@ -40,7 +40,7 @@ console.log(getYearGroups(1949,numYearGroups,yearWindow));
 console.log(getYearGroups(1948,numYearGroups,yearWindow));
 console.log(getYearGroups(1947,numYearGroups,yearWindow));*/
 
-function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape) {
+function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape,txt) {
 	//only create stuff if the group doesn't exist
 	if(parent.select("g#"+groupID)=="") {
 		//create group
@@ -74,6 +74,6 @@ function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape) {
 			.attr(yLoc,y+h/2)
 			.attr("text-anchor","middle")
 			.attr("dominant-baseline","central")
-			.text("text");
+			.text(txt);
 	}
 }

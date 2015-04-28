@@ -58,6 +58,8 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 					.attr("x",isNeighbor*(titleWidth+titlePad))
 					.attr("y",0)
 		//Add row header rects
+		createShapeTextGroup(playerCompGroups[groupTitle],"nameHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad),titleHeight,nameWidth,rectHeight,"rect","Name");
+		createShapeTextGroup(playerCompGroups[groupTitle],"statHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight,statWidth,rectHeight,"rect",statAbbrevs[stat]);
 		titleGroup.append("rect")
 					.attr("id","rowHeaderNameRect")
 					.attr("width",nameWidth)
@@ -84,25 +86,6 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 					.attr("font-size",16)
 					.attr("text-anchor","middle")
 					.attr("dominant-baseline","central")
-		//Add row header text
-		titleGroup.append("text")
-					.attr("id","rowHeaderNameText")
-					.attr("width",nameWidth)
-					.attr("height",rectHeight)
-					.attr("x",isNeighbor*(titleWidth+titlePad)+nameWidth/2)
-					.attr("y",titleHeight+rectHeight/2)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-					.text("Name")
-		titleGroup.append("text")
-					.attr("id","rowHeaderStatText")
-					.attr("width",statWidth)
-					.attr("height",rectHeight)
-					.attr("x",isNeighbor*(titleWidth+titlePad)+nameWidth+statWidth/2)
-					.attr("y",titleHeight+rectHeight/2)
-					.attr("text-anchor","middle")
-					.attr("dominant-baseline","central")
-					.text(statAbbrevs[stat])
 	}
 	titleGroup.select("#titleRect").attr("fill",function(d){return colors[d];});
 	titleGroup.select("#titleRect").attr("stroke",function(d){return colors[d];});
@@ -123,14 +106,12 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 	
 	//Add name info
 	rows.each(function(d,i){
-		createShapeTextGroup(d3.select(this),"nameCell","playerCompCell",isNeighbor*(titleWidth+titlePad),titleHeight+rectHeight+rectHeight*i,nameWidth,rectHeight,"rect");
-		d3.select(this).select("text#nameCell_text").text(function(d){return d["name"];});
+		createShapeTextGroup(d3.select(this),"nameCell","playerCompCell",isNeighbor*(titleWidth+titlePad),titleHeight+rectHeight+rectHeight*i,nameWidth,rectHeight,"rect",d["name"]);
 	});
 	
 	//Add stat info
 	rows.each(function(d,i){
-		createShapeTextGroup(d3.select(this),"statCell","playerCompCell",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight+rectHeight+rectHeight*i,statWidth,rectHeight,"rect");
-		d3.select(this).select("text#statCell_text").text(function(d){return d["statValue"];});
+		createShapeTextGroup(d3.select(this),"statCell","playerCompCell",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight+rectHeight+rectHeight*i,statWidth,rectHeight,"rect",d["statValue"]);
 	});
 }
 
@@ -138,7 +119,6 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 //chosenTeam is a dict with "name","year","playerList",eventually "W-L record", etc.
 //isNeighbor is True if the player is a neighbor
 function setChosenTeamInPlayerComparison(chosenTeam,year,stat,isNeighbor) {
-
 	d3.json("http://localhost:5000/playersOfTeam/?team="+chosenTeam+"&year="+year+"&stat="+stat,function(players) {
 		resetRowsInPlayerComp(chosenTeam,year,players["items"],isNeighbor,stat);
 		if(!isNeighbor){
@@ -147,28 +127,8 @@ function setChosenTeamInPlayerComparison(chosenTeam,year,stat,isNeighbor) {
 		}
 			
 	});
-	
-	//Set name/stat_name title row
-	
-	//Populate list of players (with up to 15 players)
-	
-	//Remove extraneous cells at bottom (if num players was <15)
-	
-	return;
 }
 
-var bestSimilarityScore;
-var worstSimilarityScore;
-var maxRadius;
-var minRadius;
-var radiusScale; //d3 scale from minRadius to maxRadius
-
-//Resets the size of all radii when a new teamGroup is added
-function resetRadii() {
-	//for each group number containing circles, re-scale existing radii
-	//using radiusScale. 
-	return;
-}
 
 var yrGroups= [2015,2005,1995,1985,1975];
 
