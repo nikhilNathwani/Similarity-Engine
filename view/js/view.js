@@ -38,7 +38,7 @@ window.onload = function () {
 }
 
 
-function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
+function setRowsInPlayerComp(chosenTeam,year,newData,stat,isNeighbor) {
 	var groupTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
 	
 	//Add title rect and text
@@ -59,7 +59,9 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 	//players corresponding to the chosen team
 	var rows= playerCompGroups[groupTitle].selectAll('g.row')
 								.data(newData);
-									
+	
+	console.log("DATA", newData)
+	
 	//ADD A TRANSITION TO MAKE THIS EXIT/ENTER SMOOTH!
 	rows.exit().remove();
 
@@ -77,37 +79,48 @@ function resetRowsInPlayerComp(chosenTeam,year,newData,isNeighbor,stat) {
 	});
 }
 
+function setNeighborGroup(ind,teams){
+	var yrGroup= neighbors.select('g#yearGroup'+ind)
+	
+	var nbrs= yrGroup.selectAll("g.neighbor")
+						.data(teams.items);
+									
+	//ADD A TRANSITION TO MAKE THIS EXIT/ENTER SMOOTH!
+	nbrs.exit().remove();
+
+	nbrs.enter().append("g")
+		.attr("class","yearGroup")
+	
+	//Add name info
+	nbrs.each(function(d,i){
+		var n= createShapeTextGroup(neighborGroups[ind],"neighborGroup"+i,"neighbor",(rectWidth+titlePad)*(i+1),(titleHeight+neighborYPad)*ind,rectWidth,titleHeight,"rect");
+		n["rect"].attr("fill",colors[teams.items[i].team]);
+		var yr= teams.items[i].year;
+		n["text"].text(teams.items[i].team + " " + yearToSeason(yr));
+	});
+}
+
 //Populates a column of the playerComparison region
 //chosenTeam is a dict with "name","year","playerList",eventually "W-L record", etc.
 //isNeighbor is True if the player is a neighbor
 function setChosenTeamInPlayerComparison(chosenTeam,year,stat,isNeighbor) {
 	d3.json("http://localhost:5000/playersOfTeam/?team="+chosenTeam+"&year="+year+"&stat="+stat,function(players) {
-		resetRowsInPlayerComp(chosenTeam,year,players["items"],isNeighbor,stat);
+		setRowsInPlayerComp(chosenTeam,year,players["items"],stat,isNeighbor);
 		if(!isNeighbor){
 			var dummyOppData= Array.apply(null, new Array(players["items"].length)).map(String.prototype.valueOf,"");
-			resetRowsInPlayerComp("Click on a team","",dummyOppData,true,stat);
+			setRowsInPlayerComp("Click on a team","",dummyOppData,stat,!isNeighbor);
 		}
 			
 	});
 }
 
 
-var yrGroups= [2015,2005,1995,1985,1975];
+var decades= [2015,2005,1995,1985,1975];
 
 function updateYearGroup(numGroup,teamName,year,stat) {
 	console.log("NumGroup",numGroup,teamName,year,stat);
-		d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&year0="+(yrGroups[numGroup]-9)+"&yearN="+yrGroups[numGroup]+"&stat="+stat,function(teams) {
-			console.log(teams)
-			for(var j=0;j<neighborsPerGroup;j++) {
-				console.log("OTHER TEAMS",j,otherTeams[j]);
-				d3.select(otherTeams[numGroup][j]).select("rect")
-										.attr("fill",colors[teams.items[j].team]);
-				yr= teams.items[j].year;
-				d3.select(otherTeams[numGroup][j]).select("text")
-							.text(teams.items[j].team + " " + yearToSeason(yr));
-				
-			}	
-			console.log("chunbi");
+		d3.json("http://localhost:5000/knn/?team="+teamName+"&year="+year+"&year0="+(decades[numGroup]-9)+"&yearN="+decades[numGroup]+"&stat="+stat,function(teams) {
+			setNeighborGroup(numGroup,teams);
 		});
 		
 		console.log("Async DB call (should be) in progress");

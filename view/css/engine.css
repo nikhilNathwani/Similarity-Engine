@@ -24,3 +24,8 @@ g.playerCompTitle text {
 	font-size: 18px;
 	fill: white;
 }
+
+g.neighbor text {
+	font-size: 16px;
+	fill: white;
+}
