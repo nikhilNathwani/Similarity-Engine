@@ -25,6 +25,10 @@ g.playerCompTitle text {
 	fill: white;
 }
 
+g.neighbor {
+	cursor: pointer;
+}
+
 g.neighbor text {
 	font-size: 16px;
 	fill: white;

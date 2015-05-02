@@ -90,21 +90,6 @@ def playersOfTeam():
 		return jsonify(items=json_result)
 	return
 
-'''@app.route('/teams/', methods=['GET'])
-def teams():
-	if request.method == 'GET':
-		team= request.args.get('limit',10)
-		off= request.args.get('offset',0)
-		results= Team.query.limit(lim).offset(off).all()
-
-		json_results= []
-		for result in results:
-			d= {'name': result.name,
-				'year': result.year}
-			json_results.append(d)
-		return jsonify(items=json_results)
-	return'''
-
 @app.route('/teams/<int:input_id>', methods=['GET'])
 def team(input_id):
 	if request.method == 'GET':
@@ -257,7 +242,7 @@ def kNN():
 			if len(results) < minNumPlayers:
 				minNumPlayers= len(results)
 
-		#level out the numnber of players on each train/test team
+		#level out the number of players on each train/test team
 		if minNumPlayers < len(chosenPlayers):
 			chosenPlayers= chosenPlayers[:minNumPlayers]
 		otherPlayers= [x[:minNumPlayers] for x in otherPlayers]
@@ -277,17 +262,17 @@ def kNN():
 			d= {
 				'team': result.name,
 				'year': result.year,
+				'stat': stat,
 				'similarity': dists[j],
 				'players': []
 			}
 			for p in otherPlayerResults[ind]:
 				d['players'].append(
-					{'player': p.player,
+					{'name': p.player,
 					'link': p.link,
 					'age': p.age,
 					'g': p.g,
-					'mp_per_g': p.mp_per_g,
-					stat: getattr(p,stat)})
+					'statValue': getattr(p,stat)})
 			json_results.append(d)
 		time6= time.time()
 		print "Total time", time.time()-start

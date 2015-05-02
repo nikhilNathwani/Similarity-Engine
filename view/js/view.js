@@ -91,12 +91,17 @@ function setNeighborGroup(ind,teams){
 	nbrs.enter().append("g")
 		.attr("class","yearGroup")
 	
-	//Add name info
+	//Add team name and on-click behavior
 	nbrs.each(function(d,i){
 		var n= createShapeTextGroup(neighborGroups[ind],"neighborGroup"+i,"neighbor",(rectWidth+titlePad)*(i+1),(titleHeight+neighborYPad)*ind,rectWidth,titleHeight,"rect");
 		n["rect"].attr("fill",colors[teams.items[i].team]);
 		var yr= teams.items[i].year;
 		n["text"].text(teams.items[i].team + " " + yearToSeason(yr));
+		
+		//Setting player comp region properly upon click
+		n["group"].on("click",function(){
+			setRowsInPlayerComp(teams.items[i].team,yr,teams.items[i].players,teams.items[i].stat,true)
+		});
 	});
 }
 

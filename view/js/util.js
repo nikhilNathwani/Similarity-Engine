@@ -30,15 +30,6 @@ function getYearGroups(currYear,numGroups,window) {
 	return groups;
 }
 
-/*  TEST FOR getYearGroups METHOD
-numYearGroups=5
-yearWindow= 10
-console.log(getYearGroups(2015,numYearGroups,yearWindow));
-console.log(getYearGroups(1984,numYearGroups,yearWindow));
-console.log(getYearGroups(1958,numYearGroups,yearWindow));
-console.log(getYearGroups(1949,numYearGroups,yearWindow));
-console.log(getYearGroups(1948,numYearGroups,yearWindow));
-console.log(getYearGroups(1947,numYearGroups,yearWindow));*/
 
 function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape,txt) {
 	//only create stuff if the group doesn't exist
@@ -80,5 +71,6 @@ function createShapeTextGroup(parent,groupID,className,x,y,w,h,shape,txt) {
 	grp.select("text").text(txt);
 	var obj={"text":grp.select("text")};
 	obj[shape]= grp.select(shape); //this is the only way to have a variable object key
+	obj["group"]= grp;
 	return obj;
 }
