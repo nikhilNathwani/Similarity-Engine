@@ -221,7 +221,9 @@ def kNN():
 		time2= time.time()
 
 		#3) Get list of "stat" values for each player on "chosenTeam"
-		query= "SELECT * FROM players WHERE team_id=%d ORDER BY %s DESC" % (chosenTeam,stat)
+		#   but only consider the 8 players that played the most games
+		qStat= '\'\'' if (stat=='g' or stat=='age') else stat #stat string for query
+		query= "SELECT * FROM (SELECT player_id,player,link,age,g,%s FROM players WHERE team_id=%d ORDER BY 'g' DESC LIMIT 10) AS alias1 ORDER BY %s DESC" % (qStat,chosenTeam,stat)
 		results= Player.query.from_statement(query).all()
 		chosenPlayers= [getattr(r,stat) for r in results]
 		time3= time.time()
@@ -233,7 +235,7 @@ def kNN():
 		#so I need to chop all teams down to having the same # of players as the min
 		minNumPlayers= len(chosenPlayers)
 		for i in otherTeams:
-			query= "SELECT * FROM players WHERE team_id=%d ORDER BY %s DESC" % (i,stat)
+			query= "SELECT * FROM (SELECT player_id,player,link,age,g,%s FROM players WHERE team_id=%d ORDER BY 'g' DESC LIMIT 10) AS alias2 ORDER BY %s DESC"  % (qStat,i,stat)
 			results= Player.query.from_statement(query).all()
 			#store full results
 			otherPlayerResults.append(results)
