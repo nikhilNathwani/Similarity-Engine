@@ -117,7 +117,7 @@ if __name__ == "__main__":
 	print "\n\n\n"
 	print p
 	
-	listsToCSV(t,"teams2.csv")
-	listsToCSV(p,"players2.csv")
+	listsToCSV(t,"teams.csv")
+	listsToCSV(p,"players.csv")
 
 	print "Time taken:", time.time()-start
