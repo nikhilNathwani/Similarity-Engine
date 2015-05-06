@@ -34,6 +34,7 @@ class Player(db.Model):
 	fg2_per_g= db.Column(db.Float)
 	fg2a_per_g= db.Column(db.Float)
 	fg2_pct= db.Column(db.Float)
+	efg_pct= db.Column(db.Float)
 	ft_per_g= db.Column(db.Float)
 	fta_per_g= db.Column(db.Float)
 	ft_pct= db.Column(db.Float)
