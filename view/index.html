@@ -39,6 +39,10 @@
 					type="button" 
 					value="Go"
 					class="btn btn-primary"/>
+			  <input id="randomButton" 
+					type="button" 
+					value="Random!"
+					class="btn btn-primary"/>
 			</form>
         </div>
 		
@@ -106,6 +110,24 @@
                 
             d3.select("#updateButton").on("click", function() {
 				//Set chosen team's info in player comparison region
+				setChosenTeamInPlayerComparison(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value,false);
+				update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
+            })
+			
+			d3.select("#randomButton").on("click", function() {
+				//Pick random team, set it in dropdown, and force season dropdown to update accordingly
+				var team = teams[Math.floor(Math.random()*teams.length)];
+				d3.select("#teamSel").node().value= team;
+				teamSel.onchange();
+				//Pick random season, set it in dropdown, and force stat dropdown to update accordingly
+				var yr = teamYears[team][Math.floor(Math.random()*teamYears[team].length)];
+				d3.select("#seasonSel").node().value= yr;
+				seasonSel.onchange()
+				//Pick random stat, set it in dropdown
+				var lst= statLists[yearToStatList[yr]];
+				var stat= lst[Math.floor(Math.random()*lst.length)];
+				d3.select("#statSel").node().value= stat;
+				//Update datavisualization with randomly-selected input
 				setChosenTeamInPlayerComparison(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value,false);
 				update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
             })
