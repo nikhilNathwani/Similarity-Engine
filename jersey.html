@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Jersey</title>
+    </head>
+    <body>
+		<!--<svg version="1.2" x=0 y=0 width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+			<rect id="r1" x=0 y=0 width=50 height=50 fill=blue></rect>
+			<text id="t1" y="0" dominant-baseline="hanging" text-anchor="central">NNss</text>
+			<script type="application/ecmascript"> 
+	   
+				var width=50, height=30;
+			
+				var textNode = document.getElementById("t1");
+				var bb = textNode.getBBox();
+				var rectNode= document.getElementById("r1");
+				rectNode.setAttribute("width", bb.width);
+				rectNode.setAttribute("height", bb.height);
+				var widthTransform = width / bb.width;
+				var heightTransform = height / bb.height;
+				var value = widthTransform < heightTransform ? widthTransform : heightTransform;
+				textNode.setAttribute("transform", "scale("+value+","+value+")");
+			</script>
+		</svg>-->
+		<svg>
+			<switch>
+				<g>
+					<g id="jerseyShape">
+						<path id="outline" fill="green" transform="translate(-40,0)" opacity="0.35" clip-path="url(#SVGID_6_)" fill="none" stroke="#000000" stroke-width="1.5" d="M116.462,113.911V39.01
+						   c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305
+						   C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901
+						   C40.813,113.911,74.434,126.427,116.462,113.911z"/>
+					</g>
+					<g id="jerseyContent">
+						<g>
+							<svg y=17>
+								<text id="name" font-family="Verdana" text-anchor="middle" dominant-baseline="central">
+									Jordan
+								</text>
+								<!-- Dynamically re-size name to fit jersey -->
+								<script type="application/ecmascript"> 
+						   			var pathNode = document.getElementById("outline");
+									var w = pathNode.getBoundingClientRect().width;
+									console.log("Path width: "+w);
+									var height=30;
+									var width=w*0.85, height=20;
+			
+									var textNode = document.getElementById("name");
+									var bb = textNode.getBBox();
+									var widthTransform = width / bb.width;
+									var heightTransform = height / bb.height;
+									var value = widthTransform < heightTransform ? widthTransform : heightTransform;
+									textNode.setAttribute("transform", "scale("+value+","+value+")");
+									textNode.setAttribute("x", (w/2)/value);
+									textNode.setAttribute("y", (bb.height/2)/value);
+								</script>
+							</svg>
+							<svg y=50>
+								<text id="number" font-family="Verdana" text-anchor="middle" dominant-baseline="central">
+									0.493
+								</text>
+								<!-- Dynamically re-size number to fit jersey -->
+								<script type="application/ecmascript"> 
+						   			var pathNode = document.getElementById("outline");
+									var w = pathNode.getBoundingClientRect().width;
+									var width=w*0.5, height=40;
+			
+									var textNode = document.getElementById("number");
+									var bb = textNode.getBBox();
+									var widthTransform = width / bb.width;
+									var heightTransform = height / bb.height;
+									var value = widthTransform < heightTransform ? widthTransform : heightTransform;
+									textNode.setAttribute("transform", "scale("+value+","+value+")");
+									textNode.setAttribute("x", (w/2)/value);
+									textNode.setAttribute("y", (bb.height/2)/value);
+								</script>
+							</svg>
+						</g>
+					</g>
+				</g>
+			</switch>
+		</svg> 
+        
+        
+    </body>
+</html>
