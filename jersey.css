@@ -1,0 +1,7 @@
+.jersey {width:100%; display:block;
+transform:scale(5); 
+-webkit-transform:scale(5); 
+-moz-transform:scale(5); 
+-ms-transform:scale(5); 
+-o-transform:scale(5);
+}
