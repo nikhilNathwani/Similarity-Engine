@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>ViewBox</title>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+    </head>
+    <body>
+        <!--CENTERS AND ALIGNS TEXT APPROPRIATELY WITHIN A GIVEN SVG!!!
+        All I have to do now is put the jersey in the outer svg, and
+        set oX and oY to be the upper left corner of where the text should
+        be placed on the jersey.
+        -->
+		<script type="text/javascript">
+			var svgOuter= d3.select("body")
+                            .append("svg")
+                            .attr("id","outer")
+                            .attr("x",0)
+                            .attr("y",0)
+                            .attr("width",500)
+                            .attr("height",500);
+                            
+            var jerseyShape= svgOuter.append("g")
+							.attr("id","jerseyShape")
+							.append("path")
+							.attr("id","outline")
+							.attr("fill","green")
+							.attr("transform","translate(-40,0)")
+							.attr("opacity","0.35")
+							.attr("clip-path","url(#SVGID_6_)")
+							.attr("fill","none")
+							.attr("stroke","#000000")
+							.attr("stroke-width","1.5")
+							.attr("d","M116.462,113.911V39.01c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901C40.813,113.911,74.434,126.427,116.462,113.911z");
+                        
+            var outline= svgOuter.append("rect")
+                                .attr("x",0)
+                                .attr("y",0)
+                                .attr("width",500)
+                                .attr("height",500)
+                                .attr("fill","blue")
+                                .attr("stroke","black")
+                                .attr("stroke-width",3)
+                                .attr("opacity",0.7);
+            
+            var svgInner= svgOuter.append("svg")
+                            .attr("id","inner")
+                            .attr("x",100)
+                            .attr("y",100);
+
+            var g= svgInner.append("g")
+                        
+            var t= g.append("text")
+                        .attr("id", "t")
+                        .attr("x",0)
+                        .attr("y",0)
+                        .attr("font-size",40)
+                        .attr("text-anchor","left")
+                        .attr("dominant-baseline","hanging")
+                        .text("Jamessaaa");
+            
+            svgInner.attr("width", function() {
+                var tBox= document.getElementById("t").getBBox()
+                return tBox.width;
+            })
+            svgInner.attr("height", function() {
+                var tBox= document.getElementById("t").getBBox()
+                return tBox.height;
+            })
+            
+            svgInner.attr("x", function() {
+                var oX= d3.select("#outer").attr("x")
+                var oW= d3.select("#outer").attr("width")
+                var nW= d3.select(this).attr("width")
+                return oX - (nW-oW)/2;
+            })
+           
+            svgInner.attr("y", function() {
+                var oY= d3.select("#outer").attr("y")
+                var oH= d3.select("#outer").attr("height")
+                var nH= d3.select(this).attr("height")
+                return oY - (nH-oH)/2;
+            })
+            
+            svgInner.attr("viewBox", function() {
+                var tBox= document.getElementById("t").getBBox()
+                var ttw= tBox.width
+                console.log("TTW:",ttw);
+                
+                var tth= tBox.height
+                var w= 100;
+                var h= 50;
+                console.log("W:",w);
+                
+                var vW= (ttw*ttw)/w;
+                var vH= (tth*tth)/h;
+                console.log("vW:",vW);
+                console.log("TTH:",tth);
+                console.log("H:",100);
+                console.log("vH:",vH);
+                var vX= (ttw-vW)/2;
+                console.log("vX:",vX);
+                var vY= (tth-vH)/2;
+                console.log("vY:",vY);              
+                return vX + " " + vY + " " + vW + " " + vH;
+            })
+            
+            svgInner.attr("preserveAspectRatio","xMidYMid meet")
+            
+		</script>
+    </body>
+</html>
