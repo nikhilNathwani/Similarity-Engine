@@ -4,16 +4,16 @@
         <meta charset="utf-8">
         <title>Jersey</title>
 		<script type="text/javascript" src="view/js/jersey.js"></script>
-		<script type="text/javascript" src="view/d3/d3.min.js"></script>
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     </head>
     <body>
 		<script type="text/javascript">
-			var playerStats= [{"name":"Pierce","number":34},{"name":"James","number":23},{"name":"Antetokounmpo","number":2},{"name":"X","number":0.492}]
+			var playerStats= [{"name":"Pierce","number":3},{"name":"James","number":23},{"name":"Antetokounmpo","number":2},{"name":"Williams","number":0},{"name":"Davis","number":87},{"name":"Harper","number":63},{"name":"Thompson","number":12},{"name":"Williamson","number":8},{"name":"Lin","number":22},{"name":"Udoh","number":41},{"name":"Simmons","number":1},{"name":"Wiggins","number":39}]
 			
 			var clothesLine= d3.select("body")
 								.append("svg")
 								.attr("id","clothesLine")
-								.attr("width",800)
+								.attr("width",1400)
 								.attr("height",600);
 								
 			clothesLine.selectAll("svg")
@@ -21,7 +21,7 @@
 						.enter()
 						.append("svg")
 						.each(function(d,i){
-							createJersey(d3.select(this),i*200 + 20,0,d["name"],d["number"]);
+							createJersey(d3.select(this),i*100 + 20,0,d["name"],d["number"]);
 						});
 		/*	
 			createJersey(0,0);

@@ -13,39 +13,36 @@
         -->
 		<script type="text/javascript">
 
-            function createJersey(name,number) {
-                //SVG in which the jersey lives
-                var svgOuter= d3.select("body")
-                                .append("svg")
-                                .attr("id","outer")
-                                .attr("x",0)
-                                .attr("y",0)
-                                .attr("width",500)
-                                .attr("height",500)
+            //SVG in which the jersey lives
+			var svgOuter= d3.select("body")
+                            .append("svg")
+                            .attr("id","outer")
+                            .attr("x",0)
+                            .attr("y",0)
+                            .attr("width",500)
+                            .attr("height",500)
 
-                //Scale everything to the desired amount
-                var g= svgOuter.append("g")
-                                .attr("transform","scale(1.0)");
+            //Scale everything to the desired amount
+            var g= svgOuter.append("g")
+                            .attr("transform","scale(1.0)");
 
-                //Drawing the jersey outline           
-                var jerseyShape= g.append("g")
-                                    .attr("id","jerseyShape")
-                                    .append("path")
-                                    .attr("id","outline")
-                                    .attr("fill","green")
-                                    .attr("transform","translate(-40,0)")
-                                    .attr("opacity","0.35")
-                                    .attr("stroke","#000000")
-                                    .attr("stroke-width","1.5")
-                                    .attr("d","M116.462,113.911V39.01c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901C40.813,113.911,74.434,126.427,116.462,113.911z");
-                scaledText(g,"name",name,24,-40,35,0.9,0.2)
-                scaledText(g,"number",number,64,-40,70,0.9,0.3)
-            }
+            //Drawing the jersey outline           
+            var jerseyShape= g.append("g")
+							.attr("id","jerseyShape")
+							.append("path")
+							.attr("id","outline")
+							.attr("fill","green")
+							.attr("transform","translate(-40,0)")
+							.attr("opacity","0.35")
+							.attr("stroke","#000000")
+							.attr("stroke-width","1.5")
+							.attr("d","M116.462,113.911V39.01c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901C40.813,113.911,74.434,126.427,116.462,113.911z");
 
-            function scaledText(parentGroup,id,value,fontSize,xTrans,yTrans,widthScale,heightScale) {
+            
+            function scaledText(id,value,fontSize,xTrans,yTrans,widthScale,heightScale) {
                 //SVG containing the text (and the viewport for it)            
-                var svgInner= parentGroup.append("svg")
-                                      .attr("id","inner");
+                var svgInner= g.append("svg")
+                            .attr("id","inner");
 
                 //Player name
                 svgInner.append("text")
@@ -109,7 +106,9 @@
                 svgInner.attr("preserveAspectRatio","xMidYMid meet")
             }
 
-            createJersey("Pierce",34)
+            scaledText("name","James",24,-40,35,0.9,0.2)
+            scaledText("number",24.12,64,-40,70,0.9,0.3)
+
             
 		</script>
     </body>
