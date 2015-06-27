@@ -1,4 +1,4 @@
-function createJersey(jerseySVG,x,y,name,number) {
+function createJersey(jerseySVG,x,y,chosenTeam,name,number) {
     //SVG in which the jersey lives
     jerseySVG.attr("id","outer")
 	            .attr("x",x)
@@ -15,10 +15,12 @@ function createJersey(jerseySVG,x,y,name,number) {
                         .attr("id","jerseyShape")
                         .append("path")
                         .attr("id","outline")
-                        .attr("fill","green")
+                        .attr("fill",function() {
+                        	return colors[chosenTeam];
+                        })
                         .attr("transform","translate(-40,0)")
-                        .attr("opacity","0.35")
-                        .attr("stroke","#000000")
+                        //.attr("opacity","0.35")
+                        .attr("stroke","#AAAAAA")
                         .attr("stroke-width","1.5")
                         .attr("d","M116.462,113.911V39.01c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901C40.813,113.911,74.434,126.427,116.462,113.911z");
     scaledText(g,"name",name,24,-40,35,0.9,0.2)
@@ -37,6 +39,7 @@ function scaledText(parentGroup,id,value,fontSize,xTrans,yTrans,widthScale,heigh
             .attr("id",value)
             .attr("x",0)
             .attr("y",0)
+            .attr("fill","white")
             .attr("font-family","sans-serif")
             .attr("font-size",fontSize)
             .attr("text-anchor","left")

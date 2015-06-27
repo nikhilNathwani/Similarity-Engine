@@ -35,6 +35,25 @@ window.onload = function () {
 }
 
 
+function setClothesline(chosenTeam,newData) {
+    var clothesLine= d3.select("body")
+                        .append("svg")
+                        .attr("id","clothesLine")
+                        .attr("x",100)
+                        .attr("y",100)
+                        .attr("width",1400)
+                        .attr("height",600);
+                        
+    clothesLine.selectAll("svg")
+                .data(newData)
+                .enter()
+                .append("svg")
+                .each(function(d,i){
+                    createJersey(d3.select(this),i*100 + 20,0,chosenTeam,d["name"],d["statValue"]);
+                });
+}
+
+
 function setRowsInPlayerComp(chosenTeam,year,newData,stat,isNeighbor) {
 	var groupTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
 	
@@ -67,12 +86,16 @@ function setRowsInPlayerComp(chosenTeam,year,newData,stat,isNeighbor) {
 	
 	//Add name info
 	rows.each(function(d,i){
-		createShapeTextGroup(d3.select(this),"nameCell","playerCompCell",isNeighbor*(titleWidth+titlePad),titleHeight+rectHeight+rectHeight*i,nameWidth,rectHeight,"rect",d["name"]);
+		var r= createShapeTextGroup(d3.select(this),"nameCell","playerCompCell",isNeighbor*(titleWidth+titlePad),titleHeight+rectHeight+rectHeight*i,nameWidth,rectHeight,"rect",d["name"]);
+		//r["rect"].attr("rx",4);
+		//r["rect"].attr("ry",4);
 	});
 	
 	//Add stat info
 	rows.each(function(d,i){
-		createShapeTextGroup(d3.select(this),"statCell","playerCompCell",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight+rectHeight+rectHeight*i,statWidth,rectHeight,"rect",d["statValue"]);
+		var r= createShapeTextGroup(d3.select(this),"statCell","playerCompCell",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight+rectHeight+rectHeight*i,statWidth,rectHeight,"rect",d["statValue"]);
+		//r["rect"].attr("rx",4);
+		//r["rect"].attr("ry",4);
 	});
 }
 
@@ -97,7 +120,8 @@ function setNeighborGroup(ind,teams){
 		
 		//Setting player comp region properly upon click
 		n["group"].on("click",function(){
-			setRowsInPlayerComp(teams.items[i].team,yr,teams.items[i].players,teams.items[i].stat,true)
+            setClothesline(teams.items[i].team,teams.items[i].players)
+			//setRowsInPlayerComp(teams.items[i].team,yr,teams.items[i].players,teams.items[i].stat,true)
 		});
 	});
 }
