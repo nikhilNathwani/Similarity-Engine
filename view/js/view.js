@@ -35,68 +35,22 @@ window.onload = function () {
 }
 
 
-function setClothesline(chosenTeam,newData) {
-    var clothesLine= d3.select("body")
-                        .append("svg")
-                        .attr("id","clothesLine")
-                        .attr("x",100)
-                        .attr("y",100)
-                        .attr("width",1400)
-                        .attr("height",600);
-                        
-    clothesLine.selectAll("svg")
-                .data(newData)
+function setClothesline(chosenTeam,year,stat) {
+    d3.json("http://localhost:5000/playersOfTeam/?team="+chosenTeam+"&year="+year+"&stat="+stat,function(players) {
+        //setJerseysInClothesline(chosenTeam,year,players["items"],stat,isNeighbor);
+        /*if(!isNeighbor){
+            var dummyOppData= Array.apply(null, new Array(players["items"].length)).map(String.prototype.valueOf,"");
+            setRowsInPlayerComp("Click on a team","",dummyOppData,stat,!isNeighbor);
+        }*/
+        console.log("CLOTH",players["items"])
+        clothesLine.selectAll("svg")
+                .data(players["items"])
                 .enter()
                 .append("svg")
                 .each(function(d,i){
-                    createJersey(d3.select(this),i*100 + 20,0,chosenTeam,d["name"],d["statValue"]);
-                });
-}
-
-
-function setRowsInPlayerComp(chosenTeam,year,newData,stat,isNeighbor) {
-	var groupTitle= isNeighbor ? "chosenNeighbor" : "chosenTeam";
-	
-	//Add title rect and text
-	var pcTitleGroup= playerCompGroups[groupTitle]
-	var pcTitle= createShapeTextGroup(pcTitleGroup,groupTitle+"Title","playerCompTitle",isNeighbor*(titleWidth+titlePad),0,titleWidth,titleHeight,"rect");
-	pcTitle["rect"].attr("fill",colors[chosenTeam]);
-	pcTitle["rect"].attr("stroke",colors[chosenTeam]);
-	pcTitle["text"].text(chosenTeam+" "+yearToSeason(year));
-	
-	//Add playerComparison table headers
-	var nh= createShapeTextGroup(pcTitleGroup,"nameHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad),titleHeight,nameWidth,rectHeight,"rect");
-	nh["text"].text("Name");
-	var sh= createShapeTextGroup(pcTitleGroup,"statHeader","playerCompHeader",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight,statWidth,rectHeight,"rect");
-	sh["text"].text(statAbbrevs[stat]);
-	
-	//Reset rows of player comp column to contain the correct number of rows
-	//And in the case of chosenTeam, populate the rows with the names of the
-	//players corresponding to the chosen team
-	var rows= playerCompGroups[groupTitle].selectAll('g.row')
-								.data(newData);
-	
-	console.log("DATA", newData)
-	
-	//ADD A TRANSITION TO MAKE THIS EXIT/ENTER SMOOTH!
-	rows.exit().remove();
-
-	rows.enter().append("g")
-		.attr("class","row")
-	
-	//Add name info
-	rows.each(function(d,i){
-		var r= createShapeTextGroup(d3.select(this),"nameCell","playerCompCell",isNeighbor*(titleWidth+titlePad),titleHeight+rectHeight+rectHeight*i,nameWidth,rectHeight,"rect",d["name"]);
-		//r["rect"].attr("rx",4);
-		//r["rect"].attr("ry",4);
-	});
-	
-	//Add stat info
-	rows.each(function(d,i){
-		var r= createShapeTextGroup(d3.select(this),"statCell","playerCompCell",isNeighbor*(titleWidth+titlePad)+nameWidth,titleHeight+rectHeight+rectHeight*i,statWidth,rectHeight,"rect",d["statValue"]);
-		//r["rect"].attr("rx",4);
-		//r["rect"].attr("ry",4);
-	});
+                    createJersey(d3.select(this),i*100 + 20,0,chosenTeam,d["name"],d["statValue"],i);
+                });     
+    });
 }
 
 function setNeighborGroup(ind,teams){
@@ -113,7 +67,7 @@ function setNeighborGroup(ind,teams){
 	
 	//Add team name and on-click behavior
 	nbrs.each(function(d,i){
-		var n= createShapeTextGroup(neighborGroups[ind],"neighborGroup"+i,"neighbor",(rectWidth+titlePad)*(i+1),(titleHeight+neighborYPad)*ind,rectWidth,titleHeight,"rect");
+		/*var n= createShapeTextGroup(neighborGroups[ind],"neighborGroup"+i,"neighbor",(rectWidth+titlePad)*(i+1),(titleHeight+neighborYPad)*ind,rectWidth,titleHeight,"rect");
 		n["rect"].attr("fill",colors[teams.items[i].team]);
 		var yr= teams.items[i].year;
 		n["text"].text(teams.items[i].team + " " + yearToSeason(yr));
@@ -122,24 +76,9 @@ function setNeighborGroup(ind,teams){
 		n["group"].on("click",function(){
             setClothesline(teams.items[i].team,teams.items[i].players)
 			//setRowsInPlayerComp(teams.items[i].team,yr,teams.items[i].players,teams.items[i].stat,true)
-		});
+		});*/
 	});
 }
-
-//Populates a column of the playerComparison region
-//chosenTeam is a dict with "name","year","playerList",eventually "W-L record", etc.
-//isNeighbor is True if the player is a neighbor
-function setChosenTeamInPlayerComparison(chosenTeam,year,stat,isNeighbor) {
-	d3.json("http://localhost:5000/playersOfTeam/?team="+chosenTeam+"&year="+year+"&stat="+stat,function(players) {
-		setRowsInPlayerComp(chosenTeam,year,players["items"],stat,isNeighbor);
-		if(!isNeighbor){
-			var dummyOppData= Array.apply(null, new Array(players["items"].length)).map(String.prototype.valueOf,"");
-			setRowsInPlayerComp("Click on a team","",dummyOppData,stat,!isNeighbor);
-		}
-			
-	});
-}
-
 
 var decades= [2015,2005,1995,1985,1975];
 
@@ -162,9 +101,6 @@ function update(teamName,year,stat) {
 	//Update best and worst similarity scores
 	
 	//Reset radii to be scaled properly
-	
-	playerCompGroups["chosenTeam"].select("text")
-						.text(teamName + " " + yearToSeason(year));
 						
 	for(var i=0; i<numYearGroups; i++) {
 		updateYearGroup(i,teamName,year,stat);

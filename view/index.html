@@ -8,44 +8,47 @@
 		<script type="text/javascript" src="js/view.js"></script>
         
         <!-- Bootstrap Core CSS -->
-        <link href="css/engine.css" rel="stylesheet">
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/engine.css" rel="stylesheet">
             
         <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
         
     </head>
     <body>
-        <div id="pickTeam">
-			<form name="myForm" role="form" novalidate="novalidate" class="form-inline">
-			  <div class="form-group">
-				<label>Pick a team</label>
-				<select id="teamSel" class="form-control">
-					<option value="" selected="selected">Select team</option>
-				</select>
-			  </div>
-			  <div class="form-group">
-				<label>, a season</label>
-				<select id="seasonSel" class="form-control">
-					<option value="" selected="selected">please select team first</option>
-				</select>
-			  </div>
-			  <div class="form-group">
-				<label>, and a stat</label>
-				<select id="statSel" class="form-control">
-					<option value="" selected="selected">please select season first</option>
-				</select>
-			  </div>
-			  <input id="updateButton" 
-					type="button" 
-					value="Go"
-					class="btn btn-primary"/>
-			  <input id="randomButton" 
-					type="button" 
-					value="Random!"
-					class="btn btn-primary"/>
-			</form>
-        </div>
-		
+    	<div id="titleBar">
+    		<h1>Similarity Engine</h1>
+    		<p>Description of the engine, use the dropdowns to see the results!</p>
+	        <div id="pickTeam">
+				<form name="myForm" role="form" novalidate="novalidate" class="form-inline">
+				  <div class="form-group">
+					<label>Pick a team</label>
+					<select id="teamSel" class="form-control">
+						<option value="" selected="selected">Select team</option>
+					</select>
+				  </div>
+				  <div class="form-group">
+					<label>, a season</label>
+					<select id="seasonSel" class="form-control">
+						<option value="" selected="selected">please select team first</option>
+					</select>
+				  </div>
+				  <div class="form-group">
+					<label>, and a stat</label>
+					<select id="statSel" class="form-control">
+						<option value="" selected="selected">please select season first</option>
+					</select>
+				  </div>
+				  <input id="updateButton" 
+						type="button" 
+						value="Go"
+						class="btn btn-primary"/>
+				  <input id="randomButton" 
+						type="button" 
+						value="Random!"
+						class="btn btn-primary"/>
+				</form>
+	        </div>
+		</div>
 		        
         <!-- D3.js -->
         <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -62,29 +65,21 @@
 						.attr("x",0)
 						.attr("y",0)
 			
-            //Create Player Comparison section
-            var playerComp= svg.append("svg")
-								.attr("width", 500)
-								.attr("height", "100%")
+			//Create Player Comparison section
+            var clothesLine= svg.append("svg")
+            					.attr("id","clothesLine")
+								.attr("width", "100%")
+								.attr("height", "300")
 								.attr("x",10)
 								.attr("y",10)
-			
-			var titleWidth= 180;
-			var nameWidth= 120;
-			var statWidth= titleWidth-nameWidth;
-			var titleHeight= 60;
-			var titlePad= 20;
-			var maxNumPlayers= 15;
-			var rectHeight= 30;
 
-			var playerCompTitles= ["chosenTeam","chosenNeighbor"];
-			var playerCompGroups= {}
+            /*var clothesLineTitles= ["chosenTeam","chosenNeighbor"];
+			var clothesLineGroups= {}
 			
 			for(var i=0; i<2; i++) {
-				playerCompGroups[playerCompTitles[i]]= playerComp.append("g").attr("id",playerCompTitles[i]);
-				p= playerCompGroups[playerCompTitles[i]];
-			}
-			
+				clothesLineGroups[clothesLineTitles[i]]= clothesLine.append("g").attr("id",clothesLineTitles[i]);
+				p= clothesLineGroups[clothesLineTitles[i]];
+			}*/		
 			
 			//Create Neighbor region
 			var neighborsPerGroup= 5;
@@ -109,8 +104,11 @@
 			}
                 
             d3.select("#updateButton").on("click", function() {
+            	//Show chosen team's jerseys
+            	setClothesline(d3.select("#teamSel").node().value,d3.select("#seasonSel").node().value, d3.select("#statSel").node().value)
+
 				//Set chosen team's info in player comparison region
-				setChosenTeamInPlayerComparison(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value,false);
+			
 				update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
             })
 			
@@ -128,7 +126,7 @@
 				var stat= lst[Math.floor(Math.random()*lst.length)];
 				d3.select("#statSel").node().value= stat;
 				//Update datavisualization with randomly-selected input
-				setChosenTeamInPlayerComparison(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value,false);
+				setClothesline(d3.select("#teamSel").node().value,d3.select("#seasonSel").node().value, d3.select("#statSel").node().value)
 				update(d3.select("#teamSel").node().value, d3.select("#seasonSel").node().value, d3.select("#statSel").node().value);
             })
 

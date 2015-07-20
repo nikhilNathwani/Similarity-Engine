@@ -1,4 +1,4 @@
-function createJersey(jerseySVG,x,y,chosenTeam,name,number) {
+function createJersey(jerseySVG,x,y,chosenTeam,name,number,num) {
     //SVG in which the jersey lives
     jerseySVG.attr("id","outer")
 	            .attr("x",x)
@@ -8,26 +8,28 @@ function createJersey(jerseySVG,x,y,chosenTeam,name,number) {
 
     //Scale everything to the desired amount
     var g= jerseySVG.append("g")
-                    .attr("transform","scale(1.0)");
+                    .attr("transform","scale(1.0)")
+                    .attr("opacity",0)
 
     //Drawing the jersey outline           
     var jerseyShape= g.append("g")
                         .attr("id","jerseyShape")
                         .append("path")
                         .attr("id","outline")
-                        .attr("fill",function() {
-                        	return colors[chosenTeam];
-                        })
+                        .attr("stroke","#DDDDDD")
                         .attr("transform","translate(-40,0)")
                         //.attr("opacity","0.35")
-                        .attr("stroke","#AAAAAA")
-                        .attr("stroke-width","1.5")
+                        .attr("fill",function() {
+                            return colors[chosenTeam];
+                        })
+                        .attr("stroke-width","3")
                         .attr("d","M116.462,113.911V39.01c0,0-18.493-5.977-15.317-30.633c0,0-8.033-2.616-8.78-3.363S91.617,9.311,79.29,9.124h-1.305C65.656,9.311,65.656,4.268,64.909,5.015s-8.778,3.363-8.778,3.363C59.305,33.034,40.813,39.01,40.813,39.01v74.901C40.813,113.911,74.434,126.427,116.462,113.911z");
-    scaledText(g,"name",name,24,-40,35,0.9,0.2)
-    scaledText(g,"number",number,64,-40,70,0.9,0.3)
+    scaledText(g,chosenTeam,"name",name,24,-40,35,0.9,0.2)
+    scaledText(g,chosenTeam,"number",number,64,-40,70,0.9,0.3)
+    g.transition().delay(100*num).attr("opacity",1)
 }
 
-function scaledText(parentGroup,id,value,fontSize,xTrans,yTrans,widthScale,heightScale) {
+function scaledText(parentGroup,team,id,value,fontSize,xTrans,yTrans,widthScale,heightScale) {
     //SVG containing the text (and the viewport for it)            
     var svgInner= parentGroup.append("svg")
                           .attr("class","inner")
@@ -44,7 +46,14 @@ function scaledText(parentGroup,id,value,fontSize,xTrans,yTrans,widthScale,heigh
             .attr("font-size",fontSize)
             .attr("text-anchor","left")
             .attr("dominant-baseline","hanging")
-            .text(value);
+            .text(function() {
+                if (id=="name") {
+                    return value.substring(value.indexOf(' '),value.length);
+                }
+                else {
+                    return value;
+                }
+            });
     
     var tBox= document.getElementById(value).getBBox()
     var oBox= document.getElementById("outline").getBBox()
